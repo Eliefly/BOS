@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>小案例</title>
+
+<link rel="stylesheet" type="text/css"
+	href="../js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="../js/easyui/themes/icon.css">
+<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+
+<link rel="stylesheet" href="../js/ztree/zTreeStyle.css" type="text/css">
+
+<script type="text/javascript" src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+<script>
+	/*添加选项卡*/
+	function addTab() {
+		// EasyUI调用函数的时候,首先先获取控件,接下来就使用.+控件的名字的方式
+
+		// 判断一个Tab是否存在
+
+		var result = $("#tabs").tabs("exists", "TestTab")
+		if (result) {
+			// 如果已经存在,打开Tab
+			$("#tabs").tabs("select", "TestTab")
+		} else { // 如果不存在,新建Tab
+			$('#tabs').tabs('add', {
+				title : 'TestTab',
+				content : 'Tab Body',
+				closable : true
+			});
+		}
+		// 选中Tab
+
+	}
+	// 构造zTree
+	$(function() {
+
+		var setting = {
+			data : {
+				simpleData : {
+					enable : true
+				}
+			},
+			callback : {
+				onClick : function(event, treeId, treeNode) {
+					// 获取节点的名字
+					var name = treeNode.name;
+					// 获取父节点的ID
+					var pId = treeNode.pId;
+
+					// 如果不是顶级菜单,就添加选项卡
+					if (pId != null) {
+						// 判断选项卡是否存在
+						var result = $('#tabs').tabs('exists', name);
+						if (result) {
+							// 存在就选中
+							$('#tabs').tabs('select', name);
+						} else {
+							// 不存在就添加
+							$('#tabs').tabs('add', {
+								title : name,
+								content : 'Tab Body',
+								closable : true
+							});
+						}
+
+					}
+
+				}
+			}
+
+		};
+
+		$.post("../data/menu.json", function(data) {
+
+			// 属性1:生成的树在那个节点上
+			//属性2: 树的属性设置
+			//属性3: 树的数据
+			$.fn.zTree.init($("#treeDemo"), setting, data);
+		}, "json");
+
+	})
+</script>
+</head>
+
+<body class="easyui-layout">
+	<!--EasyUI控件声明类别的方式 : easyui-控件的名字-->
+	<div data-options="region:'north'" style="height: 50px"></div>
+	<div data-options="region:'south'" style="height: 50px;"></div>
+	<div data-options="region:'west'" title="菜单栏" style="width: 200px;">
+
+		<div id="aa" class="easyui-accordion" data-options="fit:true">
+			<div title="面板1" data-options="iconCls:'icon-save'">
+				<a onclick="addTab()" id="btn" href="#" class="easyui-linkbutton">添加选项卡</a>
+
+			</div>
+			<div title="面板2" data-options="iconCls:'icon-reload'">
+
+				<ul id="treeDemo" class="ztree"></ul>
+			</div>
+			<div title="面板3">面板3</div>
+		</div>
+
+	</div>
+	<div data-options="region:'center',title:'内容区',iconCls:'icon-add'">
+		<div id="tabs" class="easyui-tabs" data-options="fit:true"></div>
+	</div>
+
+</body>
+
+</html>

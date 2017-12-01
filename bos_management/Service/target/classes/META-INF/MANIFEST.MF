@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Built-By: Eliefly
-Build-Jdk: 1.8.0_144
+Build-Jdk: 1.7.0_80
+Built-By: eliefly
 Created-By: Maven Integration for Eclipse
 

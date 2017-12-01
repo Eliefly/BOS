@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>简单JSON构造zTree</title>
+
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+		<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+
+		<link rel="stylesheet" href="../js/ztree/zTreeStyle.css" type="text/css">
+
+		<script type="text/javascript" src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+		<script>
+			/*添加选项卡*/
+			function addTab() {
+				// EasyUI调用函数的时候,首先先获取控件,接下来就使用.+控件的名字的方式
+
+				// 判断一个Tab是否存在
+
+				var result = $("#tabs").tabs("exists", "TestTab")
+				if(result) {
+					// 如果已经存在,打开Tab
+					$("#tabs").tabs("select", "TestTab")
+				} else { // 如果不存在,新建Tab
+					$('#tabs').tabs('add', {
+						title: 'TestTab',
+						content: 'Tab Body',
+						closable: true
+					});
+				}
+				// 选中Tab
+
+			}
+			// 构造zTree
+			$(function() {
+
+				var setting = {
+					data: {
+						simpleData: {
+							enable: true
+						}
+					}
+
+				};
+
+				var zNodes = [{
+						"id": 1,
+						"pId": 0,
+						"name": "test1"
+					},
+					{
+						"id": 11,
+						"pId": 1,
+						"name": "test11"
+					},
+					{
+						"id": 12,
+						"pId": 0,
+						"name": "test12"
+					},
+					{
+						"id": 111,
+						"pId": 11,
+						"name": "test111"
+					}
+				];
+				// 属性1:生成的树在那个节点上
+				//属性2: 树的属性设置
+				//属性3: 树的数据
+				$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			})
+		</script>
+	</head>
+
+	<body class="easyui-layout">
+		<!--EasyUI控件声明类别的方式 : easyui-控件的名字-->
+		<div data-options="region:'north'" style="height:50px"></div>
+		<div data-options="region:'south'" style="height:50px;"></div>
+		<div data-options="region:'west'" title="菜单栏" style="width:200px;">
+
+			<div id="aa" class="easyui-accordion" data-options="fit:true">
+				<div title="面板1" data-options="iconCls:'icon-save'">
+					<a onclick="addTab()" id="btn" href="#" class="easyui-linkbutton">添加选项卡</a>
+
+				</div>
+				<div title="面板2" data-options="iconCls:'icon-reload'">
+
+					<ul id="treeDemo" class="ztree"></ul>
+				</div>
+				<div title="面板3">面板3
+				</div>
+			</div>
+
+		</div>
+		<div data-options="region:'center',title:'内容区',iconCls:'icon-add'">
+			<div id="tabs" class="easyui-tabs" data-options="fit:true">
+				<div title="选项卡1" data-options="iconCls:'icon-save'">选项卡1
+				</div>
+				<div title="选项卡2" data-options="iconCls:'icon-reload'">选项卡2
+				</div>
+				<div title="选项卡3">选项卡3
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>

@@ -6,4 +6,16 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>Service</artifactId>
+  <dependencies>
+      <dependency>
+          <groupId>com.eliefly</groupId>
+          <artifactId>DAO</artifactId>
+          <version>0.0.1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+          <groupId>com.eliefly</groupId>
+          <artifactId>bosUtils</artifactId>
+          <version>0.0.1-SNAPSHOT</version>
+      </dependency>
+  </dependencies>
 </project>

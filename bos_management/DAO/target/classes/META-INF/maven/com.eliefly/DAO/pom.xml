@@ -6,4 +6,11 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>DAO</artifactId>
+  <dependencies>
+      <dependency>
+          <groupId>com.eliefly</groupId>
+          <artifactId>Domain</artifactId>
+          <version>0.0.1-SNAPSHOT</version>
+      </dependency>
+  </dependencies>
 </project>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>layout</title>
+
+<link rel="stylesheet" type="text/css"
+	href="../js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="../js/easyui/themes/icon.css">
+<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript">
+	function showAlert() {
+		// $.messager.alert('我的消息', '这是一个提示信息！', 'question');
+/* 		$.messager.confirm('确认对话框', '您想要退出该系统吗？', function(r) {
+			alert(r)
+		});
+ */
+ 
+ 
+		$.messager.show({
+			title:'我的消息',
+			msg:'消息将在3秒后关闭。',
+			timeout:3000,
+			showType:'show'
+		});
+
+	}
+</script>
+</head>
+
+<body>
+	<a href="#" class="easyui-menubutton" onclick="showAlert()"
+		data-options="iconCls:'icon-edit'">Edit</a>
+
+</body>
+
+</html>

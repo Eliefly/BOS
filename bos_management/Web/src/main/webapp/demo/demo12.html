@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>datagrid</title>
+
+<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+
+</head>
+
+<script type="text/javascript">
+	$(function() {
+		$('#data_grid').datagrid({
+			url : 'data_page.json',
+			striped : true,
+			rownumbers : true,
+			singleSelect : false,
+			pagination: true,
+			columns : [ [ {
+				field : 'cb',
+				title : 'cb',
+				checkbox: true
+			}, {
+				field : 'id',
+				title : '代码',
+				width : 100
+			}, {
+				field : 'name',
+				title : '名称',
+				width : 100
+			}, {
+				field : 'address',
+				title : '价格',
+				width : 100,
+				align : 'right'
+			} ] ],
+
+			toolbar : [ {
+				iconCls : 'icon-edit',
+				handler : function() {
+					alert('编辑按钮')
+				}
+			}, '-', {
+				iconCls : 'icon-help',
+				handler : function() {
+					alert('帮助按钮')
+				}
+			} ]
+		});
+
+	})
+</script>
+
+<body>
+	<table id="data_grid">
+	</table>
+</body>
+</html>
+
+
+

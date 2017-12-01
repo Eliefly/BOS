@@ -6,5 +6,12 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>Web</artifactId>
-  <packaging>pom</packaging>
+  <packaging>war</packaging>
+  <dependencies>
+      <dependency>
+          <groupId>com.eliefly</groupId>
+          <artifactId>Service</artifactId>
+          <version>0.0.1-SNAPSHOT</version>
+      </dependency>
+  </dependencies>
 </project>
