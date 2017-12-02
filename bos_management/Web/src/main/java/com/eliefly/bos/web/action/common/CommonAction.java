@@ -10,11 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.data.domain.Page;
 
-import com.alibaba.fastjson.JSONArray;
-import com.eliefly.bos.domain.base.Standard;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
@@ -80,8 +79,14 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
         response.getWriter().println(json);
     }
 
-    protected void list2json(List<Standard> list) throws IOException {
-        String json = JSONArray.toJSON(list).toString();
+    protected void list2json(List<T> list, String[] excludes)
+            throws IOException {
+
+        // 设置在生成json字符串的时候, 忽略的字段
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(excludes);
+
+        String json = JSONArray.fromObject(list, jsonConfig).toString();
 
         HttpServletResponse response = ServletActionContext.getResponse();
         response.setContentType("application/json;charset=UTF-8");

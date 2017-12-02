@@ -47,7 +47,7 @@ public class StandardAction extends CommonAction<Standard> {
 
         List<Standard> list = standardService.findAll();
 
-        list2json(list);
+        list2json(list, null);
 
         return NONE;
     }

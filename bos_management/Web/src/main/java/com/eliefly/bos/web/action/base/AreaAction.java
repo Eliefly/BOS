@@ -45,11 +45,36 @@ public class AreaAction extends CommonAction<Area> {
     // 使用 jquery.ocupload-1.1.2.js 上传excel文件
     private File file;
 
+    private String q;
+
+    public void setQ(String q) {
+        this.q = q;
+    }
+
     @Autowired
     private AreaService areaService;
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    /*
+     * 查询所有分区
+     */
+    @Action(value = "areaAction_findAll")
+    public String findAll() throws IOException {
+
+        List<Area> list = null;
+        // 如果没有过滤参数就查询所有
+        if (q == null) {
+            list = areaService.findAll();
+        } else {
+            list = areaService.findByQ(q);
+        }
+
+        list2json(list, new String[] {"subareas"});
+
+        return NONE;
     }
 
     /*

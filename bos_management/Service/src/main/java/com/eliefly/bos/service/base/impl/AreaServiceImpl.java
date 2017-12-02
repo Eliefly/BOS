@@ -40,4 +40,23 @@ public class AreaServiceImpl implements AreaService {
         return areaRepository.findAll(pageable);
     }
 
+    /*
+     * 查询所有分区
+     */
+    @Override
+    public List<Area> findAll() {
+
+        return areaRepository.findAll();
+    }
+
+    /*
+     * 按条件过滤分区
+     */
+    @Override
+    public List<Area> findByQ(String q) {
+        // 模糊查询
+        q = "%" + q.toUpperCase() + "%";
+        return areaRepository.findByQ(q);
+    }
+
 }

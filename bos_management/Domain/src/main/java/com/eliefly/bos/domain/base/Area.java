@@ -34,8 +34,14 @@ public class Area {
     @Column(name = "C_SHORTCODE")
     private String shortcode; // 简码
 
+    
     @OneToMany(mappedBy = "area")
     private Set<SubArea> subareas = new HashSet<SubArea>();
+
+    // 通过 net.sf.json 构造 JSON 对象是生成 "name" 字段数据.
+    public String getName() {
+        return province + city + district;
+    }
 
     public Long getId() {
         return id;
