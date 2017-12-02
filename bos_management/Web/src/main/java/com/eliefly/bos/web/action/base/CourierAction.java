@@ -2,18 +2,14 @@ package com.eliefly.bos.web.action.base;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -29,11 +25,7 @@ import org.springframework.stereotype.Controller;
 import com.eliefly.bos.domain.base.Courier;
 import com.eliefly.bos.domain.base.Standard;
 import com.eliefly.bos.service.base.CourierService;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ModelDriven;
-
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
+import com.eliefly.bos.web.action.common.CommonAction;
 
 /**
  * ClassName:CourierAction <br/>
@@ -44,14 +36,13 @@ import net.sf.json.JsonConfig;
 @ParentPackage("struts-default")
 @Controller
 @Scope("prototype")
-public class CourierAction extends ActionSupport
-        implements ModelDriven<Courier> {
+public class CourierAction extends CommonAction<Courier> {
 
     private static final long serialVersionUID = 9104033846060074565L;
 
-    // 分页查询参数
-    private int page;
-    private int rows;
+    public CourierAction() {
+        super(Courier.class);
+    }
 
     // 删除参数
     private String ids;
@@ -59,26 +50,8 @@ public class CourierAction extends ActionSupport
     @Autowired
     private CourierService courierService;
 
-    private Courier model;
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
     public void setIds(String ids) {
         this.ids = ids;
-    }
-
-    @Override
-    public Courier getModel() {
-        if (model == null) {
-            model = new Courier();
-        }
-        return model;
     }
 
     /*
@@ -102,10 +75,10 @@ public class CourierAction extends ActionSupport
         Specification<Courier> spec = new Specification<Courier>() {
 
             // 获取条件查询参数
-            String courierNum = model.getCourierNum();
-            Standard standard = model.getStandard();
-            String company = model.getCompany();
-            String type = model.getType();
+            String courierNum = getModel().getCourierNum();
+            Standard standard = getModel().getStandard();
+            String company = getModel().getCompany();
+            String type = getModel().getType();
 
             // List 存放查询条件
             List<Predicate> list = new ArrayList<>();
@@ -173,21 +146,7 @@ public class CourierAction extends ActionSupport
 
         Page<Courier> page = courierService.findAll(spec, pageable);
 
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("total", page.getTotalElements());
-        map.put("rows", page.getContent());
-
-        // 设置在生成json字符串的时候, 忽略的字段
-        JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[] {"fixedAreas", "takeTime"});
-
-        String json = JSONObject.fromObject(map, jsonConfig).toString();
-
-        HttpServletResponse response = ServletActionContext.getResponse();
-        response.setContentType("application/json;charset=UTF-8");
-
-        response.getWriter().println(json);
+        page2json(page, new String[] {"fixedAreas", "takeTime"});
 
         return NONE;
     }
@@ -199,7 +158,7 @@ public class CourierAction extends ActionSupport
             location = "pages/base/courier.html", type = "redirect")})
     public String save() {
 
-        courierService.save(model);
+        courierService.save(getModel());
         return SUCCESS;
     }
 

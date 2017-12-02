@@ -1,13 +1,8 @@
 package com.eliefly.bos.web.action.base;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -19,12 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.eliefly.bos.domain.base.Standard;
 import com.eliefly.bos.service.base.StandardService;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ModelDriven;
+import com.eliefly.bos.web.action.common.CommonAction;
 
 /**
  * ClassName:StandardAction <br/>
@@ -36,35 +28,16 @@ import com.opensymphony.xwork2.ModelDriven;
 @ParentPackage("struts-default")
 @Controller
 @Scope("prototype")
-public class StandardAction extends ActionSupport
-        implements ModelDriven<Standard> {
+public class StandardAction extends CommonAction<Standard> {
 
     private static final long serialVersionUID = 8298770702184902345L;
 
+    public StandardAction() {
+        super(Standard.class);
+    }
+
     @Autowired
     private StandardService standardService;
-
-    private int page;
-    private int rows;
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
-    private Standard model;
-
-    @Override
-    public Standard getModel() {
-
-        if (model == null) {
-            model = new Standard();
-        }
-        return model;
-    }
 
     /*
      * 查询所有收件标准
@@ -73,12 +46,8 @@ public class StandardAction extends ActionSupport
     public String findAll() throws IOException {
 
         List<Standard> list = standardService.findAll();
-        String json = JSONArray.toJSON(list).toString();
 
-        HttpServletResponse response = ServletActionContext.getResponse();
-        response.setContentType("application/json;charset=UTF-8");
-        // 返回 json 格式字符串
-        response.getWriter().println(json);
+        list2json(list);
 
         return NONE;
     }
@@ -96,21 +65,7 @@ public class StandardAction extends ActionSupport
         // 查询的数据封装在 Page 对象中
         Page<Standard> page = standardService.pageQuery(pageable);
 
-        List<Standard> list = page.getContent();
-        long totalElements = page.getTotalElements();
-
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("total", totalElements);
-        map.put("rows", list);
-
-        String json = JSONObject.toJSON(map).toString();
-
-        HttpServletResponse response = ServletActionContext.getResponse();
-        response.setContentType("application/json;charset=UTF-8");
-
-        // 返回 json 格式字符串
-        response.getWriter().println(json);
+        page2json(page, null);
 
         return NONE;
     }
@@ -122,7 +77,7 @@ public class StandardAction extends ActionSupport
             location = "/pages/base/standard.html", type = "redirect")})
     public String save() {
 
-        standardService.save(model);
+        standardService.save(getModel());
         return SUCCESS;
     }
 

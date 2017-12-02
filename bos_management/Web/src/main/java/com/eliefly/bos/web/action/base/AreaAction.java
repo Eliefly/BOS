@@ -4,16 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -27,12 +22,8 @@ import org.springframework.stereotype.Controller;
 
 import com.eliefly.bos.domain.base.Area;
 import com.eliefly.bos.service.base.AreaService;
+import com.eliefly.bos.web.action.common.CommonAction;
 import com.eliefly.utils.PinYin4jUtils;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ModelDriven;
-
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
 
 /**
  * ClassName:AreaAction <br/>
@@ -44,39 +35,21 @@ import net.sf.json.JsonConfig;
 @ParentPackage("struts-default")
 @Controller
 @Scope("prototype")
-public class AreaAction extends ActionSupport implements ModelDriven<Area> {
-
+public class AreaAction extends CommonAction<Area> {
     private static final long serialVersionUID = -7558456496886326233L;
+
+    public AreaAction() {
+        super(Area.class);
+    }
 
     // 使用 jquery.ocupload-1.1.2.js 上传excel文件
     private File file;
 
-    private Area model;
-
     @Autowired
     private AreaService areaService;
 
-    private int page;
-    private int rows;
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
     public void setFile(File file) {
         this.file = file;
-    }
-
-    @Override
-    public Area getModel() {
-        if (model == null) {
-            model = new Area();
-        }
-        return model;
     }
 
     /*
@@ -92,23 +65,7 @@ public class AreaAction extends ActionSupport implements ModelDriven<Area> {
         // 查询的数据封装在 Page 对象中
         Page<Area> page = areaService.pageQuery(pageable);
 
-        List<Area> list = page.getContent();
-        long totalElements = page.getTotalElements();
-
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("total", totalElements);
-        map.put("rows", list);
-
-        JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[] {"subareas"});
-        String json = JSONObject.fromObject(map, jsonConfig).toString();
-
-        HttpServletResponse response = ServletActionContext.getResponse();
-        response.setContentType("application/json;charset=UTF-8");
-
-        // 返回 json 格式字符串
-        response.getWriter().println(json);
+        page2json(page, new String[] {"subareas"});
 
         return NONE;
     }
@@ -172,5 +129,4 @@ public class AreaAction extends ActionSupport implements ModelDriven<Area> {
 
         return SUCCESS;
     }
-
 }
