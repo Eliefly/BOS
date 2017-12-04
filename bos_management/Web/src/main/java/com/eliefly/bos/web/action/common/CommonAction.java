@@ -79,8 +79,8 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
         response.getWriter().println(json);
     }
 
-    protected void list2json(List<T> list, String[] excludes)
-            throws IOException {
+    protected void list2json(@SuppressWarnings("rawtypes") List list,
+            String[] excludes) throws IOException {
 
         // 设置在生成json字符串的时候, 忽略的字段
         JsonConfig jsonConfig = new JsonConfig();

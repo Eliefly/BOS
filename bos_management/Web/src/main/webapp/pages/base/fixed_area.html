@@ -32,7 +32,56 @@
 	}
 
 	function doAssociations() {
-		$('#customerWindow').window('open');
+
+		var rows = $("#grid").datagrid("getSelections");
+
+		if (rows.length == 1) {
+			$('#customerWindow').window('open');
+
+			/* 先清空数据 */
+			$("#noassociationSelect").empty();
+			$("#noassociationSelect").empty();
+
+			$.post("../../fixedAreaAction_findNoassociationCustomer.action",
+					function(data) {
+						for (var i = 0; i < data.length; i++) {
+							var customer = data[i];
+							$("#noassociationSelect").append(
+									"<option value=" + customer.id + ">"
+											+ customer.username + "["
+											+ customer.telephone + "]"
+											+ "</option>");
+						}
+
+					}, "json");
+
+			$.post("../../fixedAreaAction_findAssociationCustomer.action", {
+				"id" : rows[0].id
+			}, function(data) {
+				for (var i = 0; i < data.length; i++) {
+					var customer = data[i];
+					$("#associationSelect").append(
+							"<option value=" + customer.id + ">"
+									+ customer.username + "["
+									+ customer.telephone + "]" + "</option>");
+				}
+
+			}, "json");
+		} else {
+
+			$.messager.alert('提示', '请选择一个定区进行操作!', 'info');
+		}
+
+	}
+
+	function moveToRight() {
+		$("#noassociationSelect option:selected")
+				.appendTo("#associationSelect");
+	}
+
+	function moveToLeft() {
+		$("#associationSelect option:selected")
+				.appendTo("#noassociationSelect");
 	}
 
 	//工具栏
@@ -265,6 +314,22 @@
 			$("#fixedAreaForm").submit();
 		}
 	}
+
+	function associationCustomers() {
+
+		var rows = $("#grid").datagrid("getSelections");
+
+		// 设置定区的id回表单中
+		$("#customerFixedAreaId").val(rows[0].id);
+
+		//设置右边区域的客户全部被选上
+
+		$("#associationSelect option").prop("selected", "selected");
+
+		// 提交表单
+		$("#customerForm").submit();
+
+	}
 </script>
 </head>
 
@@ -298,12 +363,12 @@
 					<tr class="title">
 						<td colspan="2">定区信息</td>
 					</tr>
-					<tr>
+					<!-- 	<tr>
 						<td>定区编码</td>
 						<td>
 							<input type="text" name="id" class="easyui-validatebox" required="true" />
 						</td>
-					</tr>
+					</tr> -->
 					<tr>
 						<td>定区名称</td>
 						<td>
@@ -383,9 +448,9 @@
 							<select id="noassociationSelect" multiple="multiple" size="10"></select>
 						</td>
 						<td>
-							<input type="button" value="》》" id="toRight">
+							<input onclick="moveToRight()" type="button" value="》》" id="toRight">
 							<br />
-							<input type="button" value="《《" id="toLeft">
+							<input onclick="moveToLeft()" type="button" value="《《" id="toLeft">
 						</td>
 						<td>
 							<select id="associationSelect" name="customerIds" multiple="multiple" size="10"></select>
@@ -393,7 +458,7 @@
 					</tr>
 					<tr>
 						<td colspan="3">
-							<a id="associationBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联客户</a>
+							<a onclick="associationCustomers()" id="associationBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联客户</a>
 						</td>
 					</tr>
 				</table>
