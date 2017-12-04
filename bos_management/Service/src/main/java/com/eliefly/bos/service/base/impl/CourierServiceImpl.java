@@ -1,5 +1,7 @@
 package com.eliefly.bos.service.base.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,6 +55,15 @@ public class CourierServiceImpl implements CourierService {
                 courierRepository.updateDelTagJPQL('1', Long.parseLong(id));
             }
         }
+    }
+
+    /*
+     * 查询所有快递员
+     */
+    @Override
+    public List<Courier> findAll() {
+
+        return courierRepository.findAll();
     }
 
 }

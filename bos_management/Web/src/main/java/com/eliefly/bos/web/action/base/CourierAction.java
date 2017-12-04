@@ -54,6 +54,21 @@ public class CourierAction extends CommonAction<Courier> {
         this.ids = ids;
     }
 
+    // courierAction_listajax.action
+
+    /*
+     * 查询所有快递员
+     */
+    @Action(value = "courierAction_listajax")
+    public String listajax() throws IOException {
+
+        List<Courier> list = courierService.findAll();
+
+        list2json(list, new String[] {"standard", "fixedAreas", "takeTime"});
+
+        return NONE;
+    }
+
     /*
      * 删除快递员(将删除标志位置'1')
      */

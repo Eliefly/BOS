@@ -1,5 +1,7 @@
 package com.eliefly.bos.service.base;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,5 +20,7 @@ public interface CourierService {
     Page<Courier> findAll(Specification<Courier> spec, Pageable pageable);
 
     void delete(String ids);
+
+    List<Courier> findAll();
 
 }

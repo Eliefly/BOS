@@ -31,7 +31,7 @@
 		$('#searchWindow').window("open");
 	}
 
-	function doAssociations() {
+	function doAssociationCustomer() {
 
 		var rows = $("#grid").datagrid("getSelections");
 
@@ -39,14 +39,14 @@
 			$('#customerWindow').window('open');
 
 			/* 先清空数据 */
-			$("#noassociationSelect").empty();
-			$("#noassociationSelect").empty();
+			$("#noassociationCustomerSelect").empty();
+			$("#associationCustomerSelect").empty();
 
 			$.post("../../fixedAreaAction_findNoassociationCustomer.action",
 					function(data) {
 						for (var i = 0; i < data.length; i++) {
 							var customer = data[i];
-							$("#noassociationSelect").append(
+							$("#noassociationCustomerSelect").append(
 									"<option value=" + customer.id + ">"
 											+ customer.username + "["
 											+ customer.telephone + "]"
@@ -60,7 +60,7 @@
 			}, function(data) {
 				for (var i = 0; i < data.length; i++) {
 					var customer = data[i];
-					$("#associationSelect").append(
+					$("#associationCustomerSelect").append(
 							"<option value=" + customer.id + ">"
 									+ customer.username + "["
 									+ customer.telephone + "]" + "</option>");
@@ -74,14 +74,65 @@
 
 	}
 
-	function moveToRight() {
-		$("#noassociationSelect option:selected")
-				.appendTo("#associationSelect");
+	function customerMoveToRight() {
+		$("#noassociationCustomerSelect option:selected").appendTo(
+				"#associationCustomerSelect");
 	}
 
-	function moveToLeft() {
-		$("#associationSelect option:selected")
-				.appendTo("#noassociationSelect");
+	function customerMoveToLeft() {
+		$("#associationCustomerSelect option:selected").appendTo(
+				"#noassociationCustomerSelect");
+	}
+
+	function doAssociationSubarea() {
+		var rows = $("#grid").datagrid("getSelections");
+
+		if (rows.length == 1) {
+			$('#subAreaWindow').window('open');
+
+			/* 先清空数据 */
+			$("#noassociationSubAreaSelect").empty();
+			$("#associationSubAreaSelect").empty();
+
+			$.post("../../fixedAreaAction_findNoassociationSubArea.action",
+					function(data) {
+						for (var i = 0; i < data.length; i++) {
+							var subArea = data[i];
+							$("#noassociationSubAreaSelect").append(
+									"<option value=" + subArea.id + ">"
+											+ subArea.assistKeyWords + "["
+											+ subArea.keyWords + "]"
+											+ "</option>");
+						}
+
+					}, "json");
+
+			$.post("../../fixedAreaAction_findAssociationSubArea.action", {
+				"id" : rows[0].id
+			}, function(data) {
+				for (var i = 0; i < data.length; i++) {
+					var subArea = data[i];
+					$("#associationSubAreaSelect").append(
+							"<option value=" + subArea.id + ">"
+									+ subArea.assistKeyWords + "["
+									+ subArea.keyWords + "]" + "</option>");
+				}
+
+			}, "json");
+		} else {
+
+			$.messager.alert('提示', '请选择一个定区进行操作!', 'info');
+		}
+	}
+
+	function subAreaMoveToRight() {
+		$("#noassociationSubAreaSelect option:selected").appendTo(
+				"#associationSubAreaSelect");
+	}
+
+	function subAreaMoveToLeft() {
+		$("#associationSubAreaSelect option:selected").appendTo(
+				"#noassociationSubAreaSelect");
 	}
 
 	//工具栏
@@ -109,7 +160,7 @@
 		id : 'button-association',
 		text : '关联客户',
 		iconCls : 'icon-sum',
-		handler : doAssociations
+		handler : doAssociationCustomer
 	}, {
 		id : 'button-association-courier',
 		text : '关联快递员',
@@ -130,7 +181,7 @@
 		id : 'button-association2',
 		text : '关联分区',
 		iconCls : 'icon-sum',
-		handler : doAssociations
+		handler : doAssociationSubarea
 	} ];
 	// 定义列
 	var columns = [ [ {
@@ -309,12 +360,14 @@
 
 	}
 
+	/* 提交保存定区 */
 	function saveData() {
 		if ($("#fixedAreaForm").form("validate")) {
 			$("#fixedAreaForm").submit();
 		}
 	}
 
+	/* 关联客户 */
 	function associationCustomers() {
 
 		var rows = $("#grid").datagrid("getSelections");
@@ -324,10 +377,40 @@
 
 		//设置右边区域的客户全部被选上
 
-		$("#associationSelect option").prop("selected", "selected");
+		$("#associationCustomerSelect option").prop("selected", "selected");
 
 		// 提交表单
 		$("#customerForm").submit();
+
+	}
+
+	/* 关联快递员 */
+	function associationCourier() {
+		var rows = $("#grid").datagrid("getSelections");
+
+		$("#courierFixedAreaId").val(rows[0].id);
+
+		if ($("#courierForm").form("validate")) {
+			// 提交表单
+			$("#courierForm").submit();
+		}
+
+	}
+
+	/* 关联分区 */
+	function associationSubAreas() {
+
+		var rows = $("#grid").datagrid("getSelections");
+
+		// 设置定区的id回表单中
+		$("#subAreaFixedAreaId").val(rows[0].id);
+
+		//设置右边区域的客户全部被选上
+
+		$("#associationSubAreaSelect option").prop("selected", "selected");
+
+		// 提交表单
+		$("#subAreaForm").submit();
 
 	}
 </script>
@@ -363,12 +446,12 @@
 					<tr class="title">
 						<td colspan="2">定区信息</td>
 					</tr>
-					<!-- 	<tr>
-						<td>定区编码</td>
-						<td>
-							<input type="text" name="id" class="easyui-validatebox" required="true" />
-						</td>
-					</tr> -->
+					<!--    <tr>
+                        <td>定区编码</td>
+                        <td>
+                            <input type="text" name="id" class="easyui-validatebox" required="true" />
+                        </td>
+                    </tr> -->
 					<tr>
 						<td>定区名称</td>
 						<td>
@@ -445,15 +528,15 @@
 					<tr>
 						<td>
 							<input type="hidden" name="id" id="customerFixedAreaId" />
-							<select id="noassociationSelect" multiple="multiple" size="10"></select>
+							<select id="noassociationCustomerSelect" multiple="multiple" size="10"></select>
 						</td>
 						<td>
-							<input onclick="moveToRight()" type="button" value="》》" id="toRight">
+							<input onclick="customerMoveToRight()" type="button" value="》》" id="toRight">
 							<br />
-							<input onclick="moveToLeft()" type="button" value="《《" id="toLeft">
+							<input onclick="customerMoveToLeft()" type="button" value="《《" id="toLeft">
 						</td>
 						<td>
-							<select id="associationSelect" name="customerIds" multiple="multiple" size="10"></select>
+							<select id="associationCustomerSelect" name="customerIds" multiple="multiple" size="10"></select>
 						</td>
 					</tr>
 					<tr>
@@ -480,16 +563,15 @@
 						<td>
 							<!-- 存放定区编号 -->
 							<input type="hidden" name="id" id="courierFixedAreaId" />
-							<!-- 								<input data-options="ditable:false, url:'../../courierAction_listajax.action',valueField:'id',textField:'name'"
-									 type="text" name="courierId" class="easyui-combobox" required="true" /> -->
-							<input data-options="ditable:false, url:'../../data/courier.json',valueField:'id',textField:'name'" type="text" name="courierId" class="easyui-combobox" required="true" />
+							<!-- <input type="text" name="courierId" class="easyui-combobox" required="true" data-options="valueField:'id', textField:'name', url:'../../data/courier.json'" /> -->
+							<input data-options="ditable:false, url:'../../courierAction_listajax.action',valueField:'id',textField:'name'" type="text" name="courierId" class="easyui-combobox" required="true" />
 						</td>
 					</tr>
 					<tr>
 						<td>选择收派时间</td>
 						<td>
 							<select required="true" class="easyui-combobox" name="takeTimeId">
-								<option>请选择</option>
+								<option></option>
 								<option value="1">北京早班</option>
 								<option value="2">北京晚班</option>
 							</select>
@@ -498,7 +580,40 @@
 					</tr>
 					<tr>
 						<td colspan="3">
-							<a id="associationCourierBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联快递员</a>
+							<a onclick="associationCourier()" id="associationCourierBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联快递员</a>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+
+	<!-- 关联分区窗口 -->
+	<div modal="true" class="easyui-window" title="关联分区窗口" id="subAreaWindow" collapsible="false" closed="true" minimizable="false" maximizable="false"
+		style="top: 20px; left: 200px; width: 400px; height: 300px;">
+		<div style="overflow: auto; padding: 5px;" border="false">
+			<form id="subAreaForm" action="../../fixedAreaAction_assignSubAreas2FixedArea.action" method="post">
+				<table class="table-edit" width="80%" align="center">
+					<tr class="title">
+						<td colspan="3">关联分区</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="hidden" name="id" id="subAreaFixedAreaId" />
+							<select id="noassociationSubAreaSelect" multiple="multiple" size="10"></select>
+						</td>
+						<td>
+							<input onclick="subAreaMoveToRight()" type="button" value="》》" id="toRight">
+							<br />
+							<input onclick="subAreaMoveToLeft()" type="button" value="《《" id="toLeft">
+						</td>
+						<td>
+							<select id="associationSubAreaSelect" name="subAreaIds" multiple="multiple" size="10"></select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<a onclick="associationSubAreas()" id="associationBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联分区</a>
 						</td>
 					</tr>
 				</table>

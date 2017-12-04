@@ -23,12 +23,16 @@ public class SubArea {
 
     @Column(name = "C_START_NUM")
     private String startNum; // 起始号
+    
     @Column(name = "C_ENDNUM")
     private String endNum; // 终止号
+    
     @Column(name = "C_SINGLE")
     private Character single; // 单双号
+    
     @Column(name = "C_KEY_WORDS")
     private String keyWords; // 关键字
+    
     @Column(name = "C_ASSIST_KEY_WORDS")
     private String assistKeyWords; // 辅助关键字
 
