@@ -261,14 +261,19 @@
 
 	});
 
-	function doDblClickRow() {
-		alert("双击表格数据...");
+	function doDblClickRow(index, row) {
+
+		//alert(row.id);
+
 		$('#association_subarea').datagrid({
 			fit : true,
 			border : true,
 			rownumbers : true,
 			striped : true,
-			url : "../../data/association_subarea.json",
+			url : "../../fixedAreaAction_findAssociationSubArea.action",
+			queryParams : {
+				"id" : row.id
+			},
 			columns : [ [ {
 				field : 'id',
 				title : '分拣编号',
@@ -308,17 +313,17 @@
 					return "";
 				}
 			}, {
-				field : 'addresskey',
+				field : 'keyWords',
 				title : '关键字',
 				width : 120,
 				align : 'center'
 			}, {
-				field : 'startnum',
+				field : 'startNum',
 				title : '起始号',
 				width : 100,
 				align : 'center'
 			}, {
-				field : 'endnum',
+				field : 'endNum',
 				title : '终止号',
 				width : 100,
 				align : 'center'
@@ -334,19 +339,23 @@
 				align : 'center'
 			} ] ]
 		});
+
 		$('#association_customer').datagrid({
 			fit : true,
 			border : true,
 			rownumbers : true,
 			striped : true,
-			url : "../../data/association_customer.json",
+			url : "../../fixedAreaAction_findAssociationCustomer.action",
+			queryParams : {
+				"id" : row.id
+			},
 			columns : [ [ {
 				field : 'id',
 				title : '客户编号',
 				width : 120,
 				align : 'center'
 			}, {
-				field : 'name',
+				field : 'username',
 				title : '客户名称',
 				width : 120,
 				align : 'center'
@@ -570,12 +579,12 @@
 					<tr>
 						<td>选择收派时间</td>
 						<td>
-							<select required="true" class="easyui-combobox" name="takeTimeId">
+							<input data-options="ditable:false, url:'../../takeTimeAction_listajax.action',valueField:'id',textField:'name'" type="text" name="takeTimeId" class="easyui-combobox" required="true" />
+							<!-- 		<select required="true" class="easyui-combobox" name="takeTimeId">
 								<option></option>
 								<option value="1">北京早班</option>
 								<option value="2">北京晚班</option>
-							</select>
-							<!-- <input type="text" name="takeTimeId" class="easyui-combobox" required="true" /> -->
+							</select> -->
 						</td>
 					</tr>
 					<tr>

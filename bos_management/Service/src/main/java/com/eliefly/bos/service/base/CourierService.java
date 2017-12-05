@@ -21,6 +21,6 @@ public interface CourierService {
 
     void delete(String ids);
 
-    List<Courier> findAll();
+    List<Courier> findValidCourier();
 
 }

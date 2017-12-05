@@ -54,15 +54,13 @@ public class CourierAction extends CommonAction<Courier> {
         this.ids = ids;
     }
 
-    // courierAction_listajax.action
-
     /*
-     * 查询所有快递员
+     * 查询所有(有效)快递员
      */
     @Action(value = "courierAction_listajax")
     public String listajax() throws IOException {
 
-        List<Courier> list = courierService.findAll();
+        List<Courier> list = courierService.findValidCourier(); // null 表示快递员"未删除"
 
         list2json(list, new String[] {"standard", "fixedAreas", "takeTime"});
 

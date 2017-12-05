@@ -22,24 +22,36 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerDao customerDao;
 
+    /*
+     * 查找所有的客户
+     */
     @Override
     public List<Customer> findAll() {
 
         return customerDao.findAll();
     }
 
+    /*
+     * 查找还未关联任何定区的客户
+     */
     @Override
     public List<Customer> findNoassociationCustomer() {
 
         return customerDao.findNoassociationCustomer();
     }
 
+    /*
+     * 查找指定定区上关联的客户
+     */
     @Override
     public List<Customer> findAssociationCustomer(String id) {
-        System.out.println("id:" + id);
+
         return customerDao.findAssociationCustomer(id);
     }
 
+    /*
+     * 把指定客户关联到指定的定区
+     */
     @Override
     public void assignCustomers2FixedArea(String fixedAreaId,
             List<Long> customerIds) {
@@ -52,6 +64,15 @@ public class CustomerServiceImpl implements CustomerService {
             customerDao.assignCustomer2FixedArea(fixedAreaId, cusId);
         }
 
+    }
+
+    /*
+     * 插入客户
+     */
+    @Override
+    public void registerCustomer(Customer customer) {
+
+        customerDao.save(customer);
     }
 
 }

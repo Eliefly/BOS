@@ -57,13 +57,10 @@ public class CourierServiceImpl implements CourierService {
         }
     }
 
-    /*
-     * 查询所有快递员
-     */
     @Override
-    public List<Courier> findAll() {
+    public List<Courier> findValidCourier() {
 
-        return courierRepository.findAll();
+        return courierRepository.findValidCourier();
     }
 
 }

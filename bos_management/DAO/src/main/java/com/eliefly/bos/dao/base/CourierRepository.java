@@ -1,5 +1,7 @@
 package com.eliefly.bos.dao.base;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +29,14 @@ public interface CourierRepository extends JpaRepository<Courier, Long>,
     @Modifying
     @Query("update Courier set deltag = ? where id = ?")
     public void updateDelTagJPQL(Character state, Long id);
+
+    @Query("from Courier where deltag is null")
+    public List<Courier> findValidCourier();
+
+    // 指定收派时间到快递员
+    @Modifying
+    @Query(value = "update T_COURIER set C_TAKETIME_ID = ?2 where C_ID = ?1",
+            nativeQuery = true)
+    public void associationTakeTimeToCourier(Long courierId, Long takeTimeId);
+    
 }

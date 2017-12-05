@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.eliefly.bos.dao.base.CourierRepository;
 import com.eliefly.bos.dao.base.FixAreaRepository;
 import com.eliefly.bos.dao.base.SubAreaRepository;
 import com.eliefly.bos.domain.base.FixedArea;
@@ -30,6 +31,9 @@ public class FixAreaServiceImpl implements FixAreaService {
     @Autowired
     private SubAreaRepository subAreaRepository;
 
+    @Autowired
+    private CourierRepository courierRepository;
+
     /*
      * 定区保存
      */
@@ -47,12 +51,16 @@ public class FixAreaServiceImpl implements FixAreaService {
     }
 
     /*
-     * 定区关联快递员
+     * 指定快递员关联到定区, 同时关联取派时间到快递员
      */
     @Override
-    public void associationCourierToFixedArea(Long id, Long courierId) {
+    public void associationCourierToFixedArea(Long id, Long courierId,
+            Long takeTimeId) {
 
+        // 此处采用了原生的sql语句操作, 也可利用JPA实体类的持久态来操作
         fixAreaRepository.associationCourierToFixedArea(id, courierId);
+
+        courierRepository.associationTakeTimeToCourier(courierId, takeTimeId);
     }
 
     /*

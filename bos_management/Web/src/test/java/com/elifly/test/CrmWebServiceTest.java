@@ -20,7 +20,7 @@ public class CrmWebServiceTest {
     @Test
     public void test01() {
         Collection<? extends Customer> collection = WebClient
-                .create("http://localhost:8180/crm/webservice/customerService/crm")
+                .create("http://localhost:8180/crm/webservice/customerService/findAllCustomers")
                 .accept(MediaType.APPLICATION_JSON)
                 .getCollection(Customer.class);
 

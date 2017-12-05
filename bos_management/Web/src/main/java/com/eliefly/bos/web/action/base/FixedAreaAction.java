@@ -56,6 +56,12 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
         this.courierId = courierId;
     }
 
+    private Long takeTimeId;
+
+    public void setTakeTimeId(Long takeTimeId) {
+        this.takeTimeId = takeTimeId;
+    }
+
     private List<Long> subAreaIds;
 
     public void setSubAreaIds(List<Long> subAreaIds) {
@@ -63,7 +69,7 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
     }
 
     /*
-     * 定区关联分区
+     * 指定分区关联到定区
      */
     @Action(value = "fixedAreaAction_assignSubAreas2FixedArea",
             results = {@Result(name = "success",
@@ -98,12 +104,12 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
         List<SubArea> list =
                 fixAreaService.findAssociationSubArea(getModel().getId());
 
-        list2json(list, new String[] {"area", "fixedArea"});
+        list2json(list, new String[] {"fixedArea", "subareas"});
         return NONE;
     }
 
     /*
-     * 定区关联快递员
+     * 指定快递员关联到定区, 同时关联取派时间到快递员
      */
     @Action(value = "fixedAreaAction_associationCourierToFixedArea",
             results = {@Result(name = "success",
@@ -113,13 +119,13 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
     public String associationCourierToFixedArea() throws IOException {
 
         fixAreaService.associationCourierToFixedArea(getModel().getId(),
-                courierId);
+                courierId, takeTimeId);
 
         return SUCCESS;
     }
 
     /*
-     * 定区关联客户
+     * 指定客户关联到定区
      */
     @Action(value = "fixedAreaAction_assignCustomers2FixedArea",
             results = {@Result(name = "success",
