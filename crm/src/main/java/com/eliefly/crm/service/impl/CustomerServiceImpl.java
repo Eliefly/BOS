@@ -75,4 +75,28 @@ public class CustomerServiceImpl implements CustomerService {
         customerDao.save(customer);
     }
 
+    /*
+     * 通过 Telephone 查询客户
+     */
+    @Override
+    public Customer findByTelephone(String telephone) {
+
+        return customerDao.findByTelephone(telephone);
+    }
+
+    /*
+     * 激活客户
+     */
+    @Override
+    public void activeCustomer(String telephone) {
+
+        customerDao.activeCustomer(telephone);
+    }
+
+    @Override
+    public Customer findByTelephoneAndPassword(String telephone, String password) {
+
+        return customerDao.findByTelephoneAndPassword(telephone, password);
+    }
+
 }

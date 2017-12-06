@@ -29,4 +29,13 @@ public interface CustomerDao extends JpaRepository<Customer, Long> {
     @Query(value = "update Customer set fixedAreaId = ? where id = ?")
     void assignCustomer2FixedArea(String fixedAreaId, Long cusId);
 
+    Customer findByTelephone(String telephone);
+
+    @Modifying
+    @Query(value = "update Customer set type = 1 where telephone = ?")
+    void activeCustomer(String telephone);
+
+    @Query("from Customer where telephone = ? and password = ?")
+    Customer findByTelephoneAndPassword(String telephone, String password);
+
 }

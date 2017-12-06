@@ -55,4 +55,25 @@ public interface CustomerService {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     public void registerCustomer(Customer customer);
 
+    // 通过 Telephone 查询客户
+    @GET
+    @Path("/findByTelephone")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Customer findByTelephone(@QueryParam("telephone") String telephone);
+
+    // 激活客户
+    @PUT
+    @Path("/activeCustomer")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    public void activeCustomer(@QueryParam("telephone") String telephone);
+
+    // 登录
+    @GET
+    @Path("/login")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Customer findByTelephoneAndPassword(@QueryParam("telephone") String telephone,
+            @QueryParam("password") String password);
+
 }
