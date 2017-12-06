@@ -11,8 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.eliefly.bos.dao.base.CourierRepository;
 import com.eliefly.bos.dao.base.FixAreaRepository;
 import com.eliefly.bos.dao.base.SubAreaRepository;
+import com.eliefly.bos.dao.base.TakeTimeRepository;
+import com.eliefly.bos.domain.base.Courier;
 import com.eliefly.bos.domain.base.FixedArea;
 import com.eliefly.bos.domain.base.SubArea;
+import com.eliefly.bos.domain.base.TakeTime;
 import com.eliefly.bos.service.base.FixAreaService;
 
 /**
@@ -33,6 +36,9 @@ public class FixAreaServiceImpl implements FixAreaService {
 
     @Autowired
     private CourierRepository courierRepository;
+
+    @Autowired
+    private TakeTimeRepository takeTimeRepository;
 
     /*
      * 定区保存
@@ -57,10 +63,35 @@ public class FixAreaServiceImpl implements FixAreaService {
     public void associationCourierToFixedArea(Long id, Long courierId,
             Long takeTimeId) {
 
-        // 此处采用了原生的sql语句操作, 也可利用JPA实体类的持久态来操作
-        fixAreaRepository.associationCourierToFixedArea(id, courierId);
+        // // 此处采用了原生的sql语句操作, 也可利用JPA实体类的持久态来操作
+        // // 查询快递员和定区是否已经关联
+        // Object object = fixAreaRepository.findCourierToFixedAreaAssociation(id,
+        // courierId);
+        //
+        // // 如果未存在关联关系, 则插入. 否则会发生SQL唯一约束错误.
+        // if (object == null) {
+        //
+        // // 中间表插入数据
+        // fixAreaRepository.associationCourierToFixedArea(id, courierId);
+        // }
+        //
+        // // 关联取派时间到快递员
+        // courierRepository.associationTakeTimeToCourier(courierId, takeTimeId);
 
-        courierRepository.associationTakeTimeToCourier(courierId, takeTimeId);
+        
+        // 方式2: 实体类操作
+        FixedArea fixedArea = fixAreaRepository.findOne(id);
+
+        Courier courier = courierRepository.findOne(courierId);
+
+        // 指定快递员关联到定区
+        fixedArea.getCouriers().add(courier);
+
+        TakeTime takeTime = takeTimeRepository.findOne(takeTimeId);
+
+        // 关联取派时间到快递员
+        courier.setTakeTime(takeTime);
+
     }
 
     /*

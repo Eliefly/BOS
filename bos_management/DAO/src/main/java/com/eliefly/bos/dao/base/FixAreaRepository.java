@@ -20,6 +20,10 @@ public interface FixAreaRepository extends JpaRepository<FixedArea, Long> {
             nativeQuery = true)
     void associationCourierToFixedArea(Long id, Long courierId);
 
+    @Query(value = "select * from T_FIXEDAREA_COURIER where C_FIXED_AREA_ID = ? and C_COURIER_ID = ?",
+            nativeQuery = true)
+    Object findCourierToFixedAreaAssociation(Long id, Long courierId);
+
     // // 查询未关联定区的分区
     // @Query(value = "select * from T_SUB_AREA where C_FIXEDAREA_ID is null",
     // nativeQuery = true)
