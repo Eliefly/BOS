@@ -38,4 +38,7 @@ public interface CustomerDao extends JpaRepository<Customer, Long> {
     @Query("from Customer where telephone = ? and password = ?")
     Customer findByTelephoneAndPassword(String telephone, String password);
 
+    @Query("select fixedAreaId from Customer where address = ?")
+    String findFixedAreaIdByAddress(String address);
+
 }

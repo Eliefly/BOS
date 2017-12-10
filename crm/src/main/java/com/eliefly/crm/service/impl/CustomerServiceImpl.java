@@ -94,9 +94,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer findByTelephoneAndPassword(String telephone, String password) {
+    public Customer findByTelephoneAndPassword(String telephone,
+            String password) {
 
         return customerDao.findByTelephoneAndPassword(telephone, password);
+    }
+
+    @Override
+    public String findFixedAreaIdByAddress(String address) {
+
+        return customerDao.findFixedAreaIdByAddress(address);
     }
 
 }

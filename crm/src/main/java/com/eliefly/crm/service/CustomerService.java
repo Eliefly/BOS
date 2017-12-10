@@ -73,7 +73,15 @@ public interface CustomerService {
     @Path("/login")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Customer findByTelephoneAndPassword(@QueryParam("telephone") String telephone,
+    public Customer findByTelephoneAndPassword(
+            @QueryParam("telephone") String telephone,
             @QueryParam("password") String password);
+
+    // 根据详细地址查询客户
+    @GET
+    @Path("/findFixedAreaIdByAddress")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public String findFixedAreaIdByAddress(@QueryParam("address") String address);
 
 }

@@ -62,4 +62,16 @@ public class CrmWebServiceTest {
         System.out.println(customer);
     }
 
+    @Test
+    public void test05() {
+
+        String fixedAreaId = WebClient
+                .create("http://localhost:8180/crm/webservice/customerService/findFixedAreaIdByAddress")
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .query("address", "北京市海淀区建材城西路金燕龙办公楼一层").get(String.class);
+
+        System.out.println(fixedAreaId);
+    }
+
 }

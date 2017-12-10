@@ -1,6 +1,7 @@
 package com.eliefly.bos.web.action.base;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
@@ -62,7 +63,7 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
         this.takeTimeId = takeTimeId;
     }
 
-    private List<Long> subAreaIds;
+    private List<Long> subAreaIds = new ArrayList<>();
 
     public void setSubAreaIds(List<Long> subAreaIds) {
         this.subAreaIds = subAreaIds;

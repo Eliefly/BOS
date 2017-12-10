@@ -20,13 +20,13 @@
     <param-value>classpath:applicationContext.xml</param-value>
   </context-param>
   
-  <!-- 配置CFX的Servlet -->
+  <!-- 配置CXF的Servlet -->
   <servlet>
-    <servlet-name>cfx</servlet-name>
+    <servlet-name>cxfServlet</servlet-name>
     <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>cfx</servlet-name>
+    <servlet-name>cxfServlet</servlet-name>
     <url-pattern>/webservice/*</url-pattern>
   </servlet-mapping>
   
