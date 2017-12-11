@@ -3,6 +3,10 @@ package com.eliefly.bos.fore.web.action;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
 
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.Session;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -16,11 +20,12 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
 import com.eliefly.crm.domain.Customer;
 import com.eliefly.utils.MailUtils;
-import com.eliefly.utils.SmsUtils;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -48,6 +53,9 @@ public class CustomerAction extends ActionSupport
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
     // 属性驱动获取注册验证码
     public void setCheckcode(String checkcode) {
         this.checkcode = checkcode;
@@ -74,7 +82,7 @@ public class CustomerAction extends ActionSupport
     public String sendSMS() throws UnsupportedEncodingException {
 
         // 生成随机验证码
-        String serverCode = RandomStringUtils.randomNumeric(4);
+        final String serverCode = RandomStringUtils.randomNumeric(4);
 
         // 验证码存放到session中
         ServletActionContext.getRequest().getSession()
@@ -82,8 +90,23 @@ public class CustomerAction extends ActionSupport
 
         System.out.println("serverCode: " + serverCode);
 
-        SmsUtils.sendSmsByHTTP(model.getTelephone(),
-                "尊敬的客户你好，您本次获取的验证码为：" + serverCode);
+        // SmsUtils.sendSmsByHTTP(model.getTelephone(),
+        // "尊敬的客户你好，您本次获取的验证码为：" + serverCode);
+
+        // 使用消息中间件 actioveMQ 发送短信
+        jmsTemplate.send("sms_message", new MessageCreator() {
+
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                MapMessage mapMessage = session.createMapMessage();
+
+                mapMessage.setString("telephone", model.getTelephone());
+                mapMessage.setString("content",
+                        "尊敬的客户你好，您本次获取的验证码为：" + serverCode);
+
+                return mapMessage;
+            }
+        });
 
         return NONE;
     }
@@ -191,8 +214,8 @@ public class CustomerAction extends ActionSupport
             results = {
                     @Result(name = "success", location = "/index.html",
                             type = "redirect"),
-                    @Result(name = "need_active", location = "/need-active.html",
-                            type = "redirect"),
+                    @Result(name = "need_active",
+                            location = "/need-active.html", type = "redirect"),
                     @Result(name = "error", location = "/login-fail.html",
                             type = "redirect")})
     public String login() {
