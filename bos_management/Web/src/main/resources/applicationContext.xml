@@ -100,5 +100,37 @@
         </jaxrs:outInterceptors>
     </jaxrs:server>
 
+    <!-- 初始化shiro框架提供的过滤器 -->
+    <bean id="shiroFilterFactoryBean" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!--注入安全管理器 -->
+        <property name="securityManager" ref="securityManager"></property>
+        <!-- 登录页面的地址,认证的地址 -->
+        <property name="loginUrl" value="/login.html"></property>
+        <!-- 认证成功以后,跳转的页面 -->
+        <property name="successUrl" value="/index.html"></property>
+        <!-- 如果用户访问了一个没有权限的页面,跳转的页面 -->
+        <property name="unauthorizedUrl" value="/unauthorized.html"></property>
+        <!-- 指定拦截的规则 -->
+        <property name="filterChainDefinitions">
+            <!-- authc : 对应的资源需要认证成功,才能访问.如果认证失败,就返回登录页面 -->
+            <!-- anon : 对应的资源可以匿名访问 -->
+            <!-- 过滤器执行的规则是从上往下,一旦有一个执行了,下面的就不再会被执行 -->
+            <!-- 规则不可以折行 -->
+            <value>
+                /css/* = anon
+                /images/* = anon
+                /js/** = anon
+                /validatecode.jsp* = anon
+                /userAction_login.action = anon
+                /** = authc
+            </value>
+        </property>
+
+    </bean>
+    <!-- 注册安全管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="userRealm"></property>
+    </bean>
+
 
 </beans>
