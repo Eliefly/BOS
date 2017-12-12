@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>layout</title>
+
+<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+
+<script type="text/javascript">
+	$(function() {
+
+		var index;
+
+		$('#t_dg').datagrid({
+			url : 'dg.json',// 指定请求地址
+			striped : true,// 显示斑马线
+			rownumbers : true,//显示行号
+			singleSelect : true,//单选
+			pagination : true,//单选
+			onAfterEdit : function(index, row, changes) {
+				// index : 发生改变的行的索引
+				// row : 发生改变的行,改变后的所有数据组成的json字符串
+				// changes : 发生改变的行, 发生改变的数据组成的json字符串
+				console.log(index)
+				console.log(row)
+				console.log(changes)
+
+			},
+			columns : [ [ {// 指定列
+				field : 'cb',
+				title : 'cb',
+				checkbox : true
+			}, {// 指定列
+				field : 'id',
+				title : '编号',
+				width : 100,
+				editor : {
+					type : 'numberbox',// 输入框的数据格式
+					options : {}
+				}
+			}, {
+				field : 'name',
+				title : '姓名',
+				width : 100,
+				editor : {
+					type : 'text',// 输入框的数据格式
+					options : {}
+				}
+			}, {
+				field : 'address',
+				title : '地址',
+				width : 100,
+				align : 'right',
+				editor : {
+					type : 'text',// 输入框的数据格式
+					options : {}
+				}
+			} ] ],
+			toolbar : [ { // 指定菜单栏
+				iconCls : 'icon-add',
+				text : "添加",
+				handler : function() {
+					$('#t_dg').datagrid('insertRow', {
+						index : 0, // 索引从0开始
+						row : {}
+					// 指定插入的行中的数据.如果不写就代表是空行
+					});
+
+					// 让表格处于编辑的状态, 第二个参数就是行的索引
+					$('#t_dg').datagrid('beginEdit', 0)
+
+				}
+			}, '-', { // 指定菜单栏
+				iconCls : 'icon-remove',
+				text : "删除",
+				handler : function() {
+
+					var rows = $('#t_dg').datagrid('getSelections')
+					if (rows.length == 1) {
+
+						index = $('#t_dg').datagrid('getRowIndex', rows[0])
+
+						// 删除行, 第二个参数就是行的索引
+						$('#t_dg').datagrid('deleteRow', index)
+					} else {
+						$.messager.alert("提示", "您只能选择一行进行操作", "warning")
+					}
+				}
+			}, '-', { // 指定菜单栏
+				iconCls : 'icon-edit',
+				text : "修改",
+				handler : function() {
+					var rows = $('#t_dg').datagrid('getSelections')
+					if (rows.length == 1) {
+
+						index = $('#t_dg').datagrid('getRowIndex', rows[0])
+
+						// 让表格处于编辑的状态, 第二个参数就是行的索引
+						$('#t_dg').datagrid('beginEdit', index)
+					} else {
+						$.messager.alert("提示", "您只能选择一行进行操作", "warning")
+					}
+
+				}
+			}, '-', { // 指定菜单栏
+				iconCls : 'icon-save',
+				text : "保存",
+				handler : function() {
+
+					// 结束编辑, 第二个参数就是行的索引
+					$('#t_dg').datagrid('endEdit', index)
+				}
+			}, '-', {
+				iconCls : 'icon-help',
+				text : "帮助",
+				handler : function() {
+					alert('帮助按钮')
+				}
+			} ]
+
+		});
+
+	})
+</script>
+</head>
+
+<body>
+
+	<table id="t_dg" class="easyui-datagrid">
+
+	</table>
+
+
+</body>
+
+</html>
