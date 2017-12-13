@@ -105,7 +105,7 @@
         <!--注入安全管理器 -->
         <property name="securityManager" ref="securityManager"></property>
         <!-- 登录页面的地址,认证的地址 -->
-        <property name="loginUrl" value="/login.html"></property>
+        <property name="loginUrl" value="/login.jsp"></property>
         <!-- 认证成功以后,跳转的页面 -->
         <property name="successUrl" value="/index.html"></property>
         <!-- 如果用户访问了一个没有权限的页面,跳转的页面 -->
@@ -123,6 +123,7 @@
                 /validatecode.jsp* = anon
                 /userAction_login.action = anon
                 /** = authc
+                /areaAction_pageQuery.action = perms["areaAction_pageQuery"]
             </value>
         </property>
 

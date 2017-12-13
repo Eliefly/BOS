@@ -2,7 +2,8 @@ package com.eliefly.bos.web.action.system;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.struts2.ServletActionContext;
@@ -43,18 +44,16 @@ public class UserAction extends CommonAction<User> {
     /*
      * 用户登录
      */
-    @Action(value = "userAction_login",
-            results = {
-                    @Result(name = "success", location = "/index.html",
-                            type = "redirect"),
-                    @Result(name = "login", location = "/login.html",
-                            type = "redirect")})
+    @Action(value = "userAction_login", results = {
+            @Result(name = "success", location = "/index.html",
+                    type = "redirect"),
+            @Result(name = "login", location = "/login.jsp", type = "dispatcher")})
     public String login() {
 
         String validateCode = (String) ServletActionContext.getRequest()
                 .getSession().getAttribute("validateCode");
 
-        System.out.println("登录验证....");
+        // System.out.println("登录验证....");
 
         if (StringUtils.isNoneEmpty(checkCode)
                 && StringUtils.isNoneEmpty(validateCode)
@@ -69,7 +68,6 @@ public class UserAction extends CommonAction<User> {
 
             // 登录
             try {
-
                 // 如果无异常则登录成功
                 subject.login(token);
 
@@ -78,14 +76,19 @@ public class UserAction extends CommonAction<User> {
                         .setAttribute("user", user);
 
                 return SUCCESS;
+            } catch (UnknownAccountException e) {
+                // addActionError("用户不存在.");
+                ServletActionContext.getRequest().setAttribute("msg", "用户不存在.");
 
-            } catch (AuthenticationException e) {
+            } catch (IncorrectCredentialsException e) {
 
-                // org.apache.shiro.authc.UnknownAccountException
-                // org.apache.shiro.authc.IncorrectCredentialsException
-                System.out.println("登录异常: " + e);
-
+                // addActionError("密码错误.");
+                ServletActionContext.getRequest().setAttribute("msg", "密码错误.");
             }
+        } else {
+
+            // addActionError("验证码错误.");
+            ServletActionContext.getRequest().setAttribute("msg", "验证码错误.");
         }
 
         return LOGIN;
