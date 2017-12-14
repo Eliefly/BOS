@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -23,24 +24,38 @@ public class Menu {
     @GeneratedValue
     @Column(name = "C_ID")
     private Long id;
+
     @Column(name = "C_NAME")
     private String name; // 菜单名称
+
     @Column(name = "C_PAGE")
     private String page; // 访问路径
+
     @Column(name = "C_PRIORITY")
     private Integer priority; // 优先级
+
     @Column(name = "C_DESCRIPTION")
     private String description; // 描述
 
     @ManyToMany(mappedBy = "menus")
     private Set<Role> roles = new HashSet<Role>(0);
 
-    @OneToMany(mappedBy = "parentMenu")
+    @OneToMany(mappedBy = "parentMenu", fetch = FetchType.EAGER)
     private Set<Menu> childrenMenus = new HashSet<Menu>();
 
     @ManyToOne
     @JoinColumn(name = "C_PID")
     private Menu parentMenu;
+
+    // 构造combotree需要的字段 children
+    public Set<Menu> getChildren() {
+        return childrenMenus;
+    }
+
+    // 构造combotree需要的字段 text
+    public String getText() {
+        return name;
+    }
 
     public Long getId() {
         return id;

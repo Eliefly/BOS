@@ -20,10 +20,13 @@ public class Permission {
 	@GeneratedValue
 	@Column(name = "C_ID")
 	private Long id;
+	
 	@Column(name = "C_NAME")
 	private String name; // 权限名称
+	
 	@Column(name = "C_KEYWORD")
 	private String keyword; // 权限关键字，用于权限控制
+	
 	@Column(name = "C_DESCRIPTION")
 	private String description; // 描述
 

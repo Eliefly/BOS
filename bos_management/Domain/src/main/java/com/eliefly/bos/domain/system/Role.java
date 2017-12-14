@@ -24,8 +24,10 @@ public class Role {
     private Long id;
     @Column(name = "C_NAME")
     private String name; // 角色名称
+    
     @Column(name = "C_KEYWORD")
     private String keyword; // 角色关键字，用于权限控制
+    
     @Column(name = "C_DESCRIPTION")
     private String description; // 描述
 
