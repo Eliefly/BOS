@@ -42,12 +42,27 @@ public class UserAction extends CommonAction<User> {
     }
 
     /*
+     * 用户注销
+     */
+    @Action(value = "userAction_logout", results = {@Result(name = "login",
+            location = "/login.jsp", type = "redirect")})
+    public String logout() {
+
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+
+        return LOGIN;
+    }
+
+    /*
      * 用户登录
      */
-    @Action(value = "userAction_login", results = {
-            @Result(name = "success", location = "/index.html",
-                    type = "redirect"),
-            @Result(name = "login", location = "/login.jsp", type = "dispatcher")})
+    @Action(value = "userAction_login",
+            results = {
+                    @Result(name = "success", location = "/index.html",
+                            type = "redirect"),
+                    @Result(name = "login", location = "/login.jsp",
+                            type = "dispatcher")})
     public String login() {
 
         String validateCode = (String) ServletActionContext.getRequest()

@@ -2,6 +2,7 @@ package com.eliefly.bos.service.base.impl;
 
 import java.util.List;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +48,7 @@ public class CourierServiceImpl implements CourierService {
     /*
      * 删除快递员
      */
+    @RequiresPermissions("courier:delete") // 注解方式配置权限要求
     @Override
     public void delete(String ids) {
         if (!StringUtils.isEmpty(ids)) {

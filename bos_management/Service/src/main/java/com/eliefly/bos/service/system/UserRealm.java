@@ -6,6 +6,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,19 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(
             PrincipalCollection arg0) {
 
-        return null;
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+
+        // 授予权限
+        // 方式1: Spring 配置文件 shiro URL过滤器拦截实现权限控制. 
+        info.addStringPermission("areaAction_pageQuery");
+
+        // 方式2.注解权限设置
+        info.addStringPermission("courier:delete");
+
+        // 方式3.shiro标签设置
+        info.addStringPermission("courier_delete");
+
+        return info;
     }
 
     /*

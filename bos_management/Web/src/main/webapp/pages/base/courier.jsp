@@ -1,8 +1,9 @@
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib uri="http://shiro.apache.org/tags" prefix="shiro"%>
 <html>
-
 <head>
-<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>管理取派员</title>
 <!-- 导入jquery核心类库 -->
 <script type="text/javascript" src="../../js/jquery-1.8.3.js"></script>
@@ -64,12 +65,17 @@
 		text : '修改',
 		iconCls : 'icon-edit',
 		handler : doEdit
-	}, {
-		id : 'button-delete',
-		text : '作废',
-		iconCls : 'icon-cancel',
-		handler : doDelete
-	}, {
+	}, 
+	<%-- 只有拥有对应权限的用户才可以看到标签中的内容  --%>
+	   <shiro:hasPermission name="courier_delete">
+	   {
+	        id : 'button-delete',
+	        text : '作废',
+	        iconCls : 'icon-cancel',
+	        handler : doDelete
+	    }, 
+	    </shiro:hasPermission>
+	{
 		id : 'button-restore',
 		text : '还原',
 		iconCls : 'icon-save',
