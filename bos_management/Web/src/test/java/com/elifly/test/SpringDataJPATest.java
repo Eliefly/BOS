@@ -1,4 +1,5 @@
 package com.elifly.test;
+
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +10,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.eliefly.bos.dao.base.StandardRepository;
+import com.eliefly.bos.dao.system.PermissionRepository;
+import com.eliefly.bos.dao.system.RoleRepository;
 import com.eliefly.bos.domain.base.Standard;
+import com.eliefly.bos.domain.system.Permission;
+import com.eliefly.bos.domain.system.Role;
 
 /**
  * ClassName:SpringDataJPATest <br/>
@@ -22,6 +27,12 @@ public class SpringDataJPATest {
 
     @Autowired
     private StandardRepository standardDao;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private PermissionRepository permissionRepository;
 
     // 增加
     @Test
@@ -120,6 +131,20 @@ public class SpringDataJPATest {
     public void test_findAll() {
 
         List<Standard> list = standardDao.findAll();
+        System.out.println(list);
+    }
+
+    @Test
+    public void test01() {
+
+        List<Role> list = roleRepository.findByUid(176L);
+        System.out.println(list);
+    }
+
+    @Test
+    public void test02() {
+
+        List<Permission> list = permissionRepository.findByUid(176L);
         System.out.println(list);
     }
 

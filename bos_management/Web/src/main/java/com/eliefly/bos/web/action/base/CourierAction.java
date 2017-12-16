@@ -71,7 +71,7 @@ public class CourierAction extends CommonAction<Courier> {
      * 删除快递员(将删除标志位置'1')
      */
     @Action(value = "courierAction_delete", results = {@Result(name = "success",
-            location = "pages/base/courier.html", type = "redirect")})
+            location = "pages/base/courier.jsp", type = "redirect")})
     public String delete() {
 
         courierService.delete(ids);
@@ -168,7 +168,7 @@ public class CourierAction extends CommonAction<Courier> {
      * 保存快递员
      */
     @Action(value = "courierAction_save", results = {@Result(name = "success",
-            location = "pages/base/courier.html", type = "redirect")})
+            location = "pages/base/courier.jsp", type = "redirect")})
     public String save() {
 
         courierService.save(getModel());

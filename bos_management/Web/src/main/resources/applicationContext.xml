@@ -132,6 +132,8 @@
     <!-- 注册安全管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="userRealm"></property>
+        <!-- 注入缓存管理器 -->
+        <property name="cacheManager" ref="cacheManager"></property>
     </bean>
 
     <!-- 基于spring自动代理方式为Service类创建代理方式,实现权限控制 -->
@@ -144,6 +146,10 @@
         <property name="securityManager" ref="securityManager"></property>
     </bean>
 
-
+    <!-- 注册缓存管理器 -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <!-- 指定配置文件的位置 -->
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"></property>
+    </bean>
 
 </beans>

@@ -85,7 +85,7 @@ public class MenuAction extends CommonAction<Menu> {
         List<Menu> list = menuService.findByParentMenuIsNull();
 
         list2json(list, new String[] {"roles", "parentMenu", "childrenMenus",
-                "name", "priority", "description", "page"});
+                "priority", "description", "page"});
 
         return NONE;
     }

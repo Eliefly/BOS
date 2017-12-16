@@ -1,6 +1,7 @@
 package com.eliefly.bos.domain.system;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -54,11 +55,19 @@ public class User implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "T_USER_ROLE",
-            joinColumns = {@JoinColumn(name = "C_USER_ID",
-                    referencedColumnName = "C_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "C_ROLE_ID",
-                    referencedColumnName = "C_ID")})
+            joinColumns = {@JoinColumn(name = "C_USER_ID", referencedColumnName = "C_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "C_ROLE_ID", referencedColumnName = "C_ID")})
     private Set<Role> roles = new HashSet<Role>(0);
+
+    // 生日格式化
+    public String getBirthdays() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if (birthday != null) {
+            return sdf.format(birthday);
+        } else {
+            return "";
+        }
+    }
 
     public Long getId() {
         return id;

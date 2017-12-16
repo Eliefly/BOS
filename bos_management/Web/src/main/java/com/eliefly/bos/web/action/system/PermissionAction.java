@@ -1,6 +1,7 @@
 package com.eliefly.bos.web.action.system;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -36,6 +37,19 @@ public class PermissionAction extends CommonAction<Permission> {
     public PermissionAction() {
 
         super(Permission.class);
+    }
+
+    /*
+     * 查询所有权限
+     */
+    @Action(value = "permissionAction_findAll")
+    public String findAll() throws IOException {
+
+        List<Permission> list = permissionService.findAll();
+
+        list2json(list, new String[] {"roles", "keyword", "description"});
+
+        return NONE;
     }
 
     /*
