@@ -47,6 +47,14 @@ public class Menu {
     @JoinColumn(name = "C_PID")
     private Menu parentMenu;
 
+    public Long getpId() {
+        if (parentMenu == null) {
+            return 0L;
+        } else {
+            return parentMenu.getId();
+        }
+    }
+
     // 构造combotree需要的字段 children
     public Set<Menu> getChildren() {
         return childrenMenus;

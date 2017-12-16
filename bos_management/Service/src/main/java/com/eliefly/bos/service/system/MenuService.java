@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.eliefly.bos.domain.system.Menu;
+import com.eliefly.bos.domain.system.User;
 
 /**
  * ClassName:MenuService <br/>
@@ -19,5 +20,7 @@ public interface MenuService {
     void save(Menu model);
 
     Page<Menu> pageQuery(Pageable pageable);
+
+    List<Menu> findByUser(User user);
 
 }

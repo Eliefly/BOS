@@ -3,6 +3,7 @@ package com.eliefly.bos.web.action.system;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
 import com.eliefly.bos.domain.system.Menu;
+import com.eliefly.bos.domain.system.User;
 import com.eliefly.bos.service.system.MenuService;
 import com.eliefly.bos.web.action.common.CommonAction;
 
@@ -40,6 +42,23 @@ public class MenuAction extends CommonAction<Menu> {
     }
 
     /*
+     * 动态加载菜单
+     */
+    @Action(value = "menuAction_findByUser")
+    public String findByUser() throws IOException {
+
+        User user = (User) ServletActionContext.getRequest().getSession().getAttribute("user");
+
+        List<Menu> list = menuService.findByUser(user);
+
+        System.out.println(list);
+
+        list2json(list, new String[] {"roles", "parentMenu", "childrenMenus", "children"});
+
+        return NONE;
+    }
+
+    /*
      * 菜单分页查询
      */
     @Action(value = "menuAction_pageQuery")
@@ -47,8 +66,7 @@ public class MenuAction extends CommonAction<Menu> {
 
         // JpaRepository 接口继承的 PagingAndSortingRepository 接口有分页查询规范
         // EasyUI的页码从1开始,SpringDataJPA框架构造PageRequest的时候,page是从0开始的
-        Pageable pageable = new PageRequest(
-                Integer.parseInt(getModel().getPage()) - 1, rows);
+        Pageable pageable = new PageRequest(Integer.parseInt(getModel().getPage()) - 1, rows);
 
         // 查询的数据封装在 Page 对象中
         Page<Menu> page = menuService.pageQuery(pageable);
@@ -61,13 +79,12 @@ public class MenuAction extends CommonAction<Menu> {
     /*
      * 保存菜单
      */
-    @Action(value = "menuAction_save", results = {@Result(name = "success",
-            location = "/pages/system/menu.html", type = "redirect")})
+    @Action(value = "menuAction_save", results = {
+            @Result(name = "success", location = "/pages/system/menu.html", type = "redirect")})
     public String save() {
 
         // 添加一级菜单: 父id为空
-        if (getModel().getParentMenu() != null
-                && getModel().getParentMenu().getId() == null) {
+        if (getModel().getParentMenu() != null && getModel().getParentMenu().getId() == null) {
 
             getModel().setParentMenu(null);
         }
@@ -84,8 +101,8 @@ public class MenuAction extends CommonAction<Menu> {
 
         List<Menu> list = menuService.findByParentMenuIsNull();
 
-        list2json(list, new String[] {"roles", "parentMenu", "childrenMenus",
-                "priority", "description", "page"});
+        list2json(list, new String[] {"roles", "parentMenu", "childrenMenus", "priority",
+                "description", "page"});
 
         return NONE;
     }

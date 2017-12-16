@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eliefly.bos.dao.system.MenuRepository;
 import com.eliefly.bos.domain.system.Menu;
+import com.eliefly.bos.domain.system.User;
 import com.eliefly.bos.service.system.MenuService;
 
 /**
@@ -40,6 +41,16 @@ public class MenuServiceImpl implements MenuService {
     public Page<Menu> pageQuery(Pageable pageable) {
 
         return menuRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Menu> findByUser(User user) {
+
+        if ("admin".equals(user.getUsername())) {
+            return menuRepository.findAll();
+        }
+
+        return menuRepository.findByUser(user.getId());
     }
 
 }
