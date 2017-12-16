@@ -152,4 +152,33 @@
         <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"></property>
     </bean>
 
+    <!--Spring提供的,整合quartz框架,通过反射的方式调用我们指定的任务类的对应方法 -->
+    <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 指定要调用的对象 -->
+        <property name="targetObject" ref="workbillMailJob"></property>
+        <!-- 指定要调用那个方法 -->
+        <property name="targetMethod" value="sendMail"></property>
+    </bean>
+
+    <!-- 指定任务调度的规则 -->
+    <bean id="emailTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!-- 要调用的对象注入进来 -->
+        <property name="jobDetail" ref="jobDetail"></property>
+        <!-- 任务调度的规则,每隔五秒钟执行一次任务 -->
+        <property name="cronExpression">
+            <value>0/5 * * * * ? 2030</value>
+        </property>
+    </bean>
+
+    <!-- 任务工厂,调用对应的任务 -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <!-- 注入要调用的规则 -->
+        <property name="triggers">
+            <list>
+                <ref bean="emailTrigger" />
+            </list>
+        </property>
+    </bean>
+
+
 </beans>
