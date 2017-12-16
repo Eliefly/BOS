@@ -32,6 +32,11 @@
 
 	}
 
+	function doExportExcel() {
+
+		window.location.href = "../../areaAction_exportExcel.action";
+	}
+
 	//工具栏
 	var toolbar = [ {
 		id : 'button-edit',
@@ -52,6 +57,11 @@
 		id : 'button-import',
 		text : '导入',
 		iconCls : 'icon-redo'
+	}, {
+		id : 'button-export',
+		text : '导出Excel',
+		iconCls : 'icon-undo',
+		handler : doExportExcel
 	} ];
 	// 定义列
 	var columns = [ [ {
@@ -136,98 +146,98 @@
 </head>
 
 <body class="easyui-layout" style="visibility: hidden;">
-	<div region="center" border="false">
-		<table id="grid"></table>
-	</div>
-	<div class="easyui-window" title="区域添加修改" id="addWindow" collapsible="false" minimizable="false" maximizable="false" style="top: 20px; left: 200px">
-		<div region="north" style="height: 31px; overflow: hidden;" split="false" border="false">
-			<div class="datagrid-toolbar">
-				<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
-			</div>
-		</div>
+    <div region="center" border="false">
+        <table id="grid"></table>
+    </div>
+    <div class="easyui-window" title="区域添加修改" id="addWindow" collapsible="false" minimizable="false" maximizable="false" style="top: 20px; left: 200px">
+        <div region="north" style="height: 31px; overflow: hidden;" split="false" border="false">
+            <div class="datagrid-toolbar">
+                <a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
+            </div>
+        </div>
 
-		<div region="center" style="overflow: auto; padding: 5px;" border="false">
-			<form>
-				<table class="table-edit" width="80%" align="center">
-					<tr class="title">
-						<td colspan="2">区域信息</td>
-					</tr>
-					<tr>
-						<td>省</td>
-						<td>
-							<input type="text" name="province" class="easyui-validatebox" required="true" />
-						</td>
-					</tr>
-					<tr>
-						<td>市</td>
-						<td>
-							<input type="text" name="city" class="easyui-validatebox" required="true" />
-						</td>
-					</tr>
-					<tr>
-						<td>区</td>
-						<td>
-							<input type="text" name="district" class="easyui-validatebox" required="true" />
-						</td>
-					</tr>
-					<tr>
-						<td>邮编</td>
-						<td>
-							<input type="text" name="postcode" class="easyui-validatebox" required="true" />
-						</td>
-					</tr>
-					<tr>
-						<td>简码</td>
-						<td>
-							<input type="text" name="shortcode" class="easyui-validatebox" required="true" />
-						</td>
-					</tr>
-					<tr>
-						<td>城市编码</td>
-						<td>
-							<input type="text" name="citycode" class="easyui-validatebox" required="true" />
-						</td>
-					</tr>
-				</table>
-			</form>
-		</div>
-	</div>
+        <div region="center" style="overflow: auto; padding: 5px;" border="false">
+            <form>
+                <table class="table-edit" width="80%" align="center">
+                    <tr class="title">
+                        <td colspan="2">区域信息</td>
+                    </tr>
+                    <tr>
+                        <td>省</td>
+                        <td>
+                            <input type="text" name="province" class="easyui-validatebox" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>市</td>
+                        <td>
+                            <input type="text" name="city" class="easyui-validatebox" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>区</td>
+                        <td>
+                            <input type="text" name="district" class="easyui-validatebox" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>邮编</td>
+                        <td>
+                            <input type="text" name="postcode" class="easyui-validatebox" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>简码</td>
+                        <td>
+                            <input type="text" name="shortcode" class="easyui-validatebox" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>城市编码</td>
+                        <td>
+                            <input type="text" name="citycode" class="easyui-validatebox" required="true" />
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
 
-	<!-- 查询区域-->
-	<div class="easyui-window" title="查询区域窗口" closed="true" id="searchWindow" collapsible="false" minimizable="false" maximizable="false" style="width: 400px; top: 40px; left: 200px">
-		<div style="overflow: auto; padding: 5px;" border="false">
-			<form id="searchForm">
-				<table class="table-edit" width="80%" align="center">
-					<tr class="title">
-						<td colspan="2">查询条件</td>
-					</tr>
-					<tr>
-						<td>省份</td>
-						<td>
-							<input type="text" name="province" />
-						</td>
-					</tr>
-					<tr>
-						<td>城市</td>
-						<td>
-							<input type="text" name="city" />
-						</td>
-					</tr>
-					<tr>
-						<td>区（县）</td>
-						<td>
-							<input type="text" name="district" />
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<a id="searchBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
-						</td>
-					</tr>
-				</table>
-			</form>
-		</div>
-	</div>
+    <!-- 查询区域-->
+    <div class="easyui-window" title="查询区域窗口" closed="true" id="searchWindow" collapsible="false" minimizable="false" maximizable="false" style="width: 400px; top: 40px; left: 200px">
+        <div style="overflow: auto; padding: 5px;" border="false">
+            <form id="searchForm">
+                <table class="table-edit" width="80%" align="center">
+                    <tr class="title">
+                        <td colspan="2">查询条件</td>
+                    </tr>
+                    <tr>
+                        <td>省份</td>
+                        <td>
+                            <input type="text" name="province" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>城市</td>
+                        <td>
+                            <input type="text" name="city" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>区（县）</td>
+                        <td>
+                            <input type="text" name="district" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <a id="searchBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
 </body>
 
 </html>
