@@ -42,4 +42,10 @@ public class PermissionServiceImpl implements PermissionService {
         return permissionRepository.findAll();
     }
 
+    @Override
+    public List<Permission> findByRoleId(Long id) {
+
+        return permissionRepository.findByRoleId(id);
+    }
+
 }

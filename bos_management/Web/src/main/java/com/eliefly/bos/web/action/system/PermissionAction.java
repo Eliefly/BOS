@@ -73,14 +73,25 @@ public class PermissionAction extends CommonAction<Permission> {
     /*
      * 保存权限
      */
-    @Action(value = "permissionAction_save",
-            results = {@Result(name = "success",
-                    location = "/pages/system/permission.html",
-                    type = "redirect")})
+    @Action(value = "permissionAction_save", results = {@Result(name = "success",
+            location = "/pages/system/permission.html", type = "redirect")})
     public String save() {
 
         permissionService.save(getModel());
         return SUCCESS;
+    }
+
+    /*
+     * 由角色ID查询角色的权限
+     */
+    @Action("permissionAction_findByRoleId")
+    public String findByRoleId() throws IOException {
+
+        List<Permission> list = permissionService.findByRoleId(getModel().getId());
+
+        list2json(list, new String[] {"roles"});
+
+        return NONE;
     }
 
 }

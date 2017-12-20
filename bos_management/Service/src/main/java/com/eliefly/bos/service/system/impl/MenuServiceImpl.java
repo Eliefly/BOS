@@ -53,4 +53,15 @@ public class MenuServiceImpl implements MenuService {
         return menuRepository.findByUser(user.getId());
     }
 
+    @Override
+    public List<Menu> findByRoleId(Long id) {
+
+        return menuRepository.findByRoleId(id);
+    }
+
+    @Override
+    public List<Menu> findAll() {
+
+        return menuRepository.findAll();
+    }
 }

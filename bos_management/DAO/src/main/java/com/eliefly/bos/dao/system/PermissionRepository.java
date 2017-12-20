@@ -17,4 +17,7 @@ public interface PermissionRepository extends JpaRepository<Permission, Long> {
     @Query("select p from Permission p inner join p.roles r inner join r.users u on u.id = ? ")
     List<Permission> findByUid(Long id);
 
+    @Query("select p from Permission p inner join p.roles r on r.id = ?")
+    List<Permission> findByRoleId(Long id);
+
 }

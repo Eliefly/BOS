@@ -3,6 +3,9 @@ package com.eliefly.bos.web.action.system;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -17,6 +20,9 @@ import org.springframework.stereotype.Controller;
 import com.eliefly.bos.domain.system.Role;
 import com.eliefly.bos.service.system.RoleService;
 import com.eliefly.bos.web.action.common.CommonAction;
+
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
 
 /**
  * ClassName:RoleAction <br/>
@@ -91,6 +97,23 @@ public class RoleAction extends CommonAction<Role> {
 
         page2json(page, new String[] {"users", "permissions", "menus"});
 
+        return NONE;
+    }
+
+    /*
+     * 查询角色信息
+     */
+    @Action(value = "roleAction_findById")
+    public String findById() throws IOException {
+        Role role = roleService.findById(getModel().getId());
+
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"users", "permissions", "menus"});
+        String json = JSONObject.fromObject(role, jsonConfig).toString();
+
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setContentType("application/json; charset=utf-8");
+        response.getWriter().write(json);
         return NONE;
     }
 

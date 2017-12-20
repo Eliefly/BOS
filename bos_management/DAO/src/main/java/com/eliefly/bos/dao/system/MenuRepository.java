@@ -19,4 +19,7 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     @Query("select m from Menu m inner join m.roles r inner join r.users u on u.id = ?")
     List<Menu> findByUser(Long id);
 
+    @Query("select m from Menu m inner join m.roles r on r.id = ?")
+    List<Menu> findByRoleId(Long id);
+
 }

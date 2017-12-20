@@ -107,4 +107,30 @@ public class MenuAction extends CommonAction<Menu> {
         return NONE;
     }
 
+    /*
+     * 根据角色ID查询菜单
+     */
+    @Action("menuAction_findByRoleId")
+    public String findByRoleId() throws IOException {
+
+        List<Menu> list = menuService.findByRoleId(getModel().getId());
+
+        list2json(list, new String[] {"roles", "childrenMenus", "parentMenu", "children"});
+
+        return NONE;
+    }
+
+    /*
+     * 查护所有菜单
+     */
+    @Action(value = "menuAction_findAll")
+    public String findAll() throws IOException {
+
+        List<Menu> list = menuService.findAll();
+
+        list2json(list, new String[] {"roles", "childrenMenus", "parentMenu", "children"});
+
+        return NONE;
+    }
+
 }

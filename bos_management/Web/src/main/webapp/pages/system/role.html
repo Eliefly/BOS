@@ -18,6 +18,120 @@
 <link rel="stylesheet" href="../../js/ztree/zTreeStyle.css" type="text/css" />
 <script src="../../js/ztree/jquery.ztree.all-3.5.js" type="text/javascript"></script>
 <script type="text/javascript">
+	function doEdit() {
+
+		// 只能选择一个定区进行关联操作
+		var rows = $("#grid").datagrid("getSelections");
+		if (rows.length == 1) {
+
+			$('#editWindow').window("open");
+
+			/* 回显角色信息 */
+			$.post("../../roleAction_findById.action", {
+				"id" : rows[0].id
+			}, function(data) {
+				$("#roleForm").form("load", data);
+			});
+
+			// 授权树初始化
+			var setting = {
+				data : {
+					key : {
+						title : "t"
+					},
+					simpleData : {
+						enable : true
+					}
+				},
+				check : {
+					enable : true,
+				}
+			};
+
+			// 标准JSON数据, 简单JSON数据
+			$.ajax({
+				url : '../../menuAction_findAllTopMenus.action',
+				type : 'POST',
+				dataType : 'text',
+				check : {
+					enable : true
+				},
+				success : function(data) {
+					var zNodes = eval("(" + data + ")");
+					$.fn.zTree.init($("#menuTree"), setting, zNodes);
+
+					/* 菜单回显 */
+					$.post("../../menuAction_findByRoleId.action", {
+						"id" : rows[0].id
+					}, function(data) {
+						// 获取ztree
+						var treeObj = $.fn.zTree.getZTreeObj("menuTree");
+
+						$(data).each(function(idx, ele) {
+
+							var node = treeObj.getNodeByParam("id", ele.id);
+							node.checked = true;
+							treeObj.updateNode(node); //更新状态
+						});
+
+					});
+				},
+				error : function(msg) {
+					alert('树加载异常!');
+				}
+			});
+
+			var selectedPid = [];
+			$.post("../../permissionAction_findByRoleId.action", {
+				"id" : rows[0].id
+			}, function(data) {
+				selectedPid = data;
+			});
+
+			$.post("../../permissionAction_findAll.action", function(data) {
+				$("#permissionTd").empty();
+				for (var i = 0; i < data.length; i++) {
+					var id = data[i].id;
+					var name = data[i].name;
+					for (var j = 0; j < selectedPid.length; j++) {
+						if (id == selectedPid[j].id) {
+							$("#permissionTd").append('<input id="'+id+'" type="checkbox" checked=true name="permissionIds" value="'+id+'" /><label for="'+id+'">' + name + '</label>')
+							break;
+						}
+					}
+					if (j == selectedPid.length) {
+						$("#permissionTd").append('<input id="'+id+'" type="checkbox" name="permissionIds" value="'+id+'" /><label for="'+id+'">' + name + '</label>')
+					}
+				}
+			});
+
+			// 点击保存
+			$('#save').click(function() {
+				if ($("#roleForm").form("validate")) {
+					// 获取ztree
+					var treeObj = $.fn.zTree.getZTreeObj("menuTree");
+					// 获取被选中的节点
+					var nodes = treeObj.getCheckedNodes(true);
+					// 获取被选中的菜单的ID
+					var arr = new Array();
+					for (var i = 0; i < nodes.length; i++) {
+						arr.push(nodes[i].id)
+					}
+					// 获取用户勾选的菜单ID组成的字符串
+					var menuIDs = arr.toString();
+					// 为隐藏域赋值
+					$("#menuIds").val(menuIDs)
+					// 提交表单
+					$("#roleForm").submit();
+				}
+			});
+
+		} else {
+
+			$.messager.alert("提示", "您最多只能选择一条数据进行修改", "warning");
+		}
+	}
+
 	$(function() {
 		// 数据表格属性
 		$("#grid").datagrid({
@@ -28,15 +142,25 @@
 				handler : function() {
 					location.href = 'role_add.html';
 				}
+			}, {
+				id : 'button-edit',
+				text : '修改',
+				iconCls : 'icon-edit',
+				handler : doEdit
 			} ],
 			url : '../../roleAction_pageQuery.action',
 			pageList : [ 30, 50, 100 ],
 			pagination : true,
 			fit : true,
+			rownumbers : true,
+			idField : 'id',
+			striped : true,
+			border : true,
 			columns : [ [ {
 				field : 'id',
 				title : '编号',
-				width : 200
+				width : 200,
+				checkbox : true
 			}, {
 				field : 'name',
 				title : '名称',
@@ -51,14 +175,67 @@
 				width : 200
 			} ] ]
 		});
+
 	});
 </script>
+
+
+
 </head>
 
 <body class="easyui-layout">
-	<div data-options="region:'center'">
-		<table id="grid"></table>
-	</div>
+    <div data-options="region:'center'">
+        <table id="grid"></table>
+    </div>
+
+    <div class="easyui-window" title="对角色修改" id="editWindow" modal="true" closed="true" collapsible="false" minimizable="false" maximizable="false"
+        style="width: 800px; height: 400px; top: 20px; left: 200px">
+        <div region="north" style="height: 31px; overflow: hidden;" split="false" border="false">
+            <div class="datagrid-toolbar">
+                <a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">确定修改</a>
+            </div>
+        </div>
+        <div region="center" style="overflow: auto; padding: 5px;" border="false">
+            <form id="roleForm" method="post" action="../../roleAction_save.action">
+                <input type="hidden" name="id">
+                <!--  提交用户勾选的菜单的ID -->
+                <input type="hidden" name="menuIds" id="menuIds">
+                <table class="table-edit" width="80%" align="center">
+                    <tr class="title">
+                        <td colspan="2">角色信息</td>
+                    </tr>
+                    <tr>
+                        <td>名称</td>
+                        <td>
+                            <input type="text" name="name" class="easyui-validatebox" data-options="required:true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>关键字</td>
+                        <td>
+                            <input type="text" name="keyword" class="easyui-validatebox" data-options="required:true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>描述</td>
+                        <td>
+                            <textarea name="description" rows="4" cols="60"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>权限选择</td>
+                        <td id="permissionTd"></td>
+                    </tr>
+                    <tr>
+                        <td>菜单授权</td>
+                        <td>
+                            <ul id="menuTree" class="ztree"></ul>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
 </body>
 
 </html>

@@ -7,10 +7,10 @@ import org.springframework.data.domain.Pageable;
 
 import com.eliefly.bos.domain.system.Permission;
 
-/**  
- * ClassName:PermissionService <br/>  
- * Function:  <br/>  
- * Date:     2017年12月14日 下午3:53:45 <br/>       
+/**
+ * ClassName:PermissionService <br/>
+ * Function: <br/>
+ * Date: 2017年12月14日 下午3:53:45 <br/>
  */
 public interface PermissionService {
 
@@ -20,5 +20,6 @@ public interface PermissionService {
 
     List<Permission> findAll();
 
+    List<Permission> findByRoleId(Long id);
+
 }
-  

@@ -23,4 +23,8 @@ public interface MenuService {
 
     List<Menu> findByUser(User user);
 
+    List<Menu> findByRoleId(Long id);
+
+    List<Menu> findAll();
+
 }

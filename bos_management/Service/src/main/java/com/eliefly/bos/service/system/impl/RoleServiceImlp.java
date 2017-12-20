@@ -1,5 +1,6 @@
 package com.eliefly.bos.service.system.impl;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +39,21 @@ public class RoleServiceImlp implements RoleService {
     public void save(Role role, String menuIds, List<Long> permissionIds) {
 
         // 保存之后role就是持久态 的, 利用持久态对象更新其他信息. 放在最后会报错.
-        roleRepository.save(role);
+        if (role.getId() != null) {
+
+            Role roleDB = roleRepository.findOne(role.getId());
+            roleDB.setDescription(role.getDescription());
+            roleDB.setKeyword(role.getKeyword());
+            roleDB.setName(role.getName());
+            roleDB.setMenus(new HashSet<Menu>());
+            roleDB.setPermissions(new HashSet<Permission>());
+
+            role = roleDB;
+
+        } else {
+
+            roleRepository.save(role);
+        }
 
         Set<Menu> menus = role.getMenus();
         Set<Permission> permissions = role.getPermissions();
@@ -77,4 +92,9 @@ public class RoleServiceImlp implements RoleService {
         return roleRepository.findAll();
     }
 
+    @Override
+    public Role findById(Long id) {
+
+        return roleRepository.findOne(id);
+    }
 }
