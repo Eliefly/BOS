@@ -99,3 +99,6 @@ buildNumber.properties
 *.log
 *.iml
 /.idea/vcs.xml
+/bos_management/Domain/target/classes/META-INF/maven/com.eliefly/Domain/pom.properties
+/bos_management/Service/target/classes/META-INF/maven/com.eliefly/Service/pom.properties
+/bos_management/Web/mylog.log
